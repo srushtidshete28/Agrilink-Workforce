@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worker Dashboard - AgriLink Workforce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-leaf fa-2x" style="color: #4caf50;"></i>
+        <h1>AgriLink Workforce</h1>
+      </div>
+      <nav>
+        <ul id="auth-nav">
+          <!-- Will be populated by JavaScript -->
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="alert-container"></div>
+
+  <div class="container">
+    <div class="dashboard-container" id="worker-dashboard">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="#profile-section" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+          <li><a href="#notifications-section"><i class="fas fa-bell"></i> Notifications</a></li>
+          <li><a href="#ratings-section"><i class="fas fa-star"></i> My Ratings</a></li>
+        </ul>
+      </div>
+
+      <div class="main-content">
+        <section id="profile-section">
+          <div class="dashboard-header">
+            <h2 class="section-title">My Profile</h2>
+            <div class="availability-toggle">
+              <span id="availability-status">Available for Work</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="availability-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="profile-container">
+            <form id="worker-profile-form">
+              <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" class="form-control" required>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group form-group-half">
+                  <label for="location">Location</label>
+                  <input type="text" id="location" name="location" class="form-control" required>
+                </div>
+                <div class="form-group form-group-half">
+                  <label for="phoneNumber">Phone Number</label>
+                  <input type="tel" id="phoneNumber" name="phoneNumber" class="form-control" required>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group form-group-half">
+                  <label for="experience">Years of Experience</label>
+                  <input type="number" id="experience" name="experience" class="form-control" min="0" required>
+                </div>
+                <div class="form-group form-group-half">
+                  <label for="dailyWage">Daily Wage ($)</label>
+                  <input type="number" id="dailyWage" name="dailyWage" class="form-control" min="1" step="0.01" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="skills">Skills (comma separated)</label>
+                <input type="text" id="skills" name="skills" class="form-control" placeholder="e.g. Harvesting, Planting, Tractor Operation" required>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group form-group-half">
+                  <label for="availabilityStart">Available From</label>
+                  <input type="date" id="availabilityStart" name="availabilityStart" class="form-control" required>
+                </div>
+                <div class="form-group form-group-half">
+                  <label for="availabilityEnd">Available Until</label>
+                  <input type="date" id="availabilityEnd" name="availabilityEnd" class="form-control" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="bio">Bio (Tell farmers about yourself)</label>
+                <textarea id="bio" name="bio" class="form-control" rows="4"></textarea>
+              </div>
+              
+              <button type="submit" class="btn btn-block">Save Profile</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="notifications-section" style="display: none;">
+          <div class="dashboard-header">
+            <h2 class="section-title">Notifications</h2>
+          </div>
+          
+          <div class="notification-center">
+            <div id="notifications-list">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 AgriLink Workforce. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Tab navigation
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuLinks = document.querySelectorAll('.sidebar-menu a');
+      const sections = document.querySelectorAll('.main-content section');
+      
+      menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          // Remove active class from all links
+          menuLinks.forEach(link => link.classList.remove('active'));
+          
+          // Add active class to clicked link
+          link.classList.add('active');
+          
+          // Hide all sections
+          sections.forEach(section => section.style.display = 'none');
+          
+          // Show target section
+          const targetId = link.getAttribute('href');
+          document.querySelector(targetId).style.display = 'block';
+        });
+      });
+    });
+  </script>
+  <script src="/js/main.js"></script>
+  <script src="/js/worker.js"></script>
+</body>
+</html>

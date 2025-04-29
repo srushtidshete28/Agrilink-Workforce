@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Dashboard - AgriLink Workforce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-leaf fa-2x" style="color: #4caf50;"></i>
+        <h1>AgriLink Workforce</h1>
+      </div>
+      <nav>
+        <ul id="auth-nav">
+          <!-- Will be populated by JavaScript -->
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="alert-container"></div>
+
+  <div class="container">
+    <div class="dashboard-container" id="farmer-dashboard">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="#workers-section" class="active"><i class="fas fa-users"></i> Find Workers</a></li>
+          <li><a href="#notifications-section"><i class="fas fa-bell"></i> Notifications</a></li>
+        </ul>
+      </div>
+
+      <div class="main-content">
+        <section id="workers-section">
+          <div class="dashboard-header">
+            <h2 class="section-title">Find Workers</h2>
+          </div>
+
+          <div class="worker-filters">
+            <form id="worker-filter-form">
+              <div class="filter-row">
+                <div class="filter-group">
+                  <label for="location">Location</label>
+                  <input type="text" id="location" name="location" class="form-control" placeholder="City or region">
+                </div>
+                <div class="filter-group">
+                  <label for="skills">Skills</label>
+                  <input type="text" id="skills" name="skills" class="form-control" placeholder="e.g. Harvesting, Planting">
+                </div>
+              </div>
+              
+              <div class="filter-row">
+                <div class="filter-group">
+                  <label for="minExperience">Min. Experience (years)</label>
+                  <input type="number" id="minExperience" name="minExperience" class="form-control" min="0">
+                </div>
+                <div class="filter-group">
+                  <label for="maxDailyWage">Max. Daily Wage ($)</label>
+                  <input type="number" id="maxDailyWage" name="maxDailyWage" class="form-control" min="0">
+                </div>
+                <div class="filter-group filter-actions">
+                  <button type="submit" class="btn">Filter</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="worker-grid" id="worker-grid">
+            <!-- Will be populated by JavaScript -->
+          </div>
+        </section>
+
+        <section id="notifications-section" style="display: none;">
+          <div class="dashboard-header">
+            <h2 class="section-title">Notifications</h2>
+          </div>
+          
+          <div class="notification-center">
+            <div id="notifications-list">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 AgriLink Workforce. All rights reserved.
+      </div>
+    </div>
+  </footer> 
+
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Populate authentication navigation
+        const authNav = document.getElementById('auth-nav');
+        authNav.innerHTML = `
+            <li><a href="#"><i class="fas fa-user-circle"></i> John Smith</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        `;
+
+        // Sample worker data
+        const workers = [
+            {
+                id: 1,
+                name: "Maria Rodriguez",
+                location: "Fresno, CA",
+                skills: ["Harvesting", "Pruning", "Sorting"],
+                experience: 5,
+                dailyWage: 120,
+                rating: 4.8
+            },
+            {
+                id: 2,
+                name: "James Wilson",
+                location: "Bakersfield, CA",
+                skills: ["Planting", "Irrigation", "Equipment Operation"],
+                experience: 3,
+                dailyWage: 110,
+                rating: 4.5
+            },
+            {
+                id: 3,
+                name: "Miguel Hernandez",
+                location: "Sacramento, CA",
+                skills: ["Harvesting", "Pest Control", "Greenhouse"],
+                experience: 7,
+                dailyWage: 135,
+                rating: 4.9
+            },
+            {
+                id: 4,
+                name: "Sarah Johnson",
+                location: "Modesto, CA",
+                skills: ["Sorting", "Packing", "Quality Control"],
+                experience: 2,
+                dailyWage: 100,
+                rating: 4.3
+            }
+        ];
+
+        // Sample notifications
+        const notifications = [
+            {
+                id: 1,
+                title: "Worker Application",
+                message: "Maria Rodriguez has applied for your seasonal position",
+                time: "2 hours ago",
+                isRead: false
+            },
+            {
+                id: 2,
+                title: "Payment Confirmation",
+                message: "Payment of $560 to James Wilson has been processed",
+                time: "1 day ago",
+                isRead: true
+            },
+            {
+                id: 3,
+                title: "System Update",
+                message: "AgriLink platform will be updated on April 30, 2025",
+                time: "3 days ago",
+                isRead: true
+            }
+        ];
+
+        // Render workers
+        function renderWorkers(workersList) {
+            const workerGrid = document.getElementById('worker-grid');
+            workerGrid.innerHTML = '';
+
+            if (workersList.length === 0) {
+                workerGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No workers match your criteria. Try adjusting your filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            workersList.forEach(worker => {
+                const workerCard = document.createElement('div');
+                workerCard.className = 'worker-card';
+                
+                const skillsHTML = worker.skills.map(skill => 
+                    <span class="skill-tag">${skill}</span>
+                ).join('');
+                
+                workerCard.innerHTML = `
+  <div class="worker-header">
+    <div class="worker-avatar">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="worker-info">
+      <h3>${worker.name}</h3>
+      <p><i class="fas fa-map-marker-alt"></i> ${worker.location}</p>
+    </div>
+  </div>
+  <div class="worker-body">
+    <div class="worker-skills">
+      ${skillsHTML}
+    </div>
+    <div class="worker-details">
+      <div class="detail-item">
+        <i class="fas fa-briefcase"></i>
+        <span>${worker.experience} years</span>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-dollar-sign"></i>
+        <span>$${worker.dailyWage}/day</span>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-star"></i>
+        <span>${worker.rating}/5.0</span>
+      </div>
+    </div>
+    <div class="worker-actions">
+      <button class="btn btn-primary" onclick="viewProfile(${worker.id})">View Profile</button>
+      <button class="btn btn-secondary" onclick="contactWorker(${worker.id})">Contact</button>
+    </div>
+  </div>
+`;
+
+workerGrid.appendChild(workerCard);
+
+            });
+        }
+
+        // Render notifications
+        function renderNotifications(notificationsList) {
+            const notificationsContainer = document.getElementById('notifications-list');
+            notificationsContainer.innerHTML = '';
+
+            if (notificationsList.length === 0) {
+                notificationsContainer.innerHTML = 
+                    <div class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>No notifications at this time.</p>
+                    </div>
+                ;
+                return;
+            }
+
+            notificationsList.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.isRead ? 'read' : 'unread'}`;
+                
+                notificationItem.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h4>${notification.title}</h4>
+                        <p>${notification.message}</p>
+                        <span class="notification-time">${notification.time}</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="btn-icon" onclick="markAsRead(${notification.id})">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn-icon" onclick="deleteNotification(${notification.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                notificationsContainer.appendChild(notificationItem);
+            });
+        }
+
+        // Show alert
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alert-container');
+            const alertElement = document.createElement('div');
+            alertElement.className = `alert alert-${type}`;
+            alertElement.innerHTML = `
+                <span>${message}</span>
+                <button class="close-btn" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            alertContainer.appendChild(alertElement);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alertElement.parentNode === alertContainer) {
+                    alertElement.remove();
+                }
+            }, 5000);
+        }
+
+        // Filter workers function
+        function filterWorkers() {
+            const location = document.getElementById('location').value.toLowerCase();
+            const skills = document.getElementById('skills').value.toLowerCase();
+            const minExperience = document.getElementById('minExperience').value;
+            const maxDailyWage = document.getElementById('maxDailyWage').value;
+            
+            return workers.filter(worker => {
+                // Filter by location
+                if (location && !worker.location.toLowerCase().includes(location)) {
+                    return false;
+                }
+                
+                // Filter by skills
+                if (skills) {
+                    const skillsArray = skills.split(',').map(s => s.trim());
+                    const hasSkill = skillsArray.some(skill => 
+                        worker.skills.some(workerSkill => 
+                            workerSkill.toLowerCase().includes(skill)
+                        )
+                    );
+                    if (!hasSkill) return false;
+                }
+                
+                // Filter by experience
+                if (minExperience && worker.experience < parseInt(minExperience)) {
+                    return false;
+                }
+                
+                // Filter by wage
+                if (maxDailyWage && worker.dailyWage > parseInt(maxDailyWage)) {
+                    return false;
+                }
+                
+                return true;
+            });
+        }
+
+        // Event handlers
+        window.viewProfile = function(workerId) {
+            showAlert(`Viewing profile of worker #${workerId}`, 'success');
+        };
+        
+        window.contactWorker = function(workerId) {
+            showAlert(`Contact request sent to worker #${workerId}`, 'success');
+        };
+        
+        window.markAsRead = function(notificationId) {
+            // Find and update notification
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification) {
+                notification.isRead = true;
+                renderNotifications(notifications);
+                showAlert('Notification marked as read', 'success');
+            }
+        };
+        
+        window.deleteNotification = function(notificationId) {
+            // Filter out the notification
+            const index = notifications.findIndex(n => n.id === notificationId);
+            if (index !== -1) {
+                notifications.splice(index, 1);
+                renderNotifications(notifications);
+                showAlert('Notification deleted', 'success');
+            }
+        };
+
+        // Initialize the dashboard
+        renderWorkers(workers);
+        renderNotifications(notifications);
+        
+        // Set up event listeners
+        document.getElementById('worker-filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const filteredWorkers = filterWorkers();
+            renderWorkers(filteredWorkers);
+            showAlert(`Found ${filteredWorkers.length} workers matching your criteria`, 'success');
+        });
+        
+        document.getElementById('worker-filter-form').addEventListener('reset', function() {
+            setTimeout(() => {
+                renderWorkers(workers);
+                showAlert('Filters have been reset', 'info');
+            }, 10);
+        });
+        
+        // Tab navigation
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-menu a').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const targetId = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.main-content > section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+            });
+        });
+        
+        // Show welcome message
+        showAlert('Welcome to your AgriLink dashboard!', 'success');
+    });
+</script>
+<script src="/js/main.js"></script>
+  <script src="/js/farmer.js"></script>
+</body>
+</html>

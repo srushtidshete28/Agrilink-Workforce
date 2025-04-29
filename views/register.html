@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - AgriLink Workforce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-leaf fa-2x" style="color: #4caf50;"></i>
+        <h1>AgriLink Workforce</h1>
+      </div>
+      <nav>
+        <ul id="auth-nav">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="alert-container"></div>
+
+  <div class="container">
+    <div class="form-container">
+      <h2 class="form-title">Create an Account</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label>I am a:</label>
+          <div class="user-type-selection">
+            <div class="user-type-option" data-type="worker">
+              <i class="fas fa-user-tie"></i>
+              <div>Worker</div>
+            </div>
+            <div class="user-type-option" data-type="farmer">
+              <i class="fas fa-tractor"></i>
+              <div>Farmer</div>
+            </div>
+          </div>
+          <input type="hidden" id="user-type" name="userType">
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" minlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-block">Register</button>
+      </form>
+      <div class="form-footer">
+        Already have an account? <a href="/login">Login here</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 AgriLink Workforce. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/register.js"></script>
+</body>
+</html>
